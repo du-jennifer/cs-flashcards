@@ -52,7 +52,7 @@ GIF created with GIPHY
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+A challengt I encountered in this project was the animation of flipping the cards. After rotating the button, the text was also rotated. Therefore, I had to find account for a separate text rotation as well.
 
 ## License
 
