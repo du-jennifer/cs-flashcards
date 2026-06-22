@@ -1,6 +1,6 @@
 import './App.css';
 import FlashCard from './components/FlashCard'
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import lifoImg from "./images/lifo.jpg";
 import binarySearchImg from "./images/binarySearch.png";
 import dijkstraImg from "./images/dijkstra.png";
@@ -15,7 +15,7 @@ import sqlImg from "./images/sql.jpg";
 import atomicityImg from "./images/atomicity.png";
 
 const App = () => {
-  const [flashCards, setFlashCards] = useState([
+  const ORIG_DECK = [
     {
       question: 'Which data structure operates on a Last-In, First-Out (LIFO) basis?',
       answer: 'Stack',
@@ -88,31 +88,68 @@ const App = () => {
       difficulty: 'hard',
       image: pipelineImg
     }
-  ])
+  ];
 
-  useEffect(() => {
-    const shuffled = [...flashCards];
-
+  const shuffleArray = (array) => {
+    const shuffled = [...array];
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
+    return shuffled;
+  };
 
-    setFlashCards(shuffled);
-  }, []);
-
+  const [flashCards, setFlashCards] = useState(() => shuffleArray(ORIG_DECK));
   const [index, setIndex] = useState(0);
+  const [guess, setGuess] = useState('');
+  const [guessText, setGuessText] = useState('');
+  const isPrevDisabled = index === 0 ? 'disabled' : 'enabled';
+  const isNextDisabled = index === flashCards.length - 1 ? 'disabled' : 'enabled';
+
+  const handleShuffle = () => {
+    setFlashCards(shuffleArray(flashCards));
+    setIndex(0);
+    setGuess('');
+    setGuessText(''); 
+  };
 
   const increaseIndex = () => {
     if (index < flashCards.length-1){
       setIndex(index+1); 
+      setGuess('');
+      setGuessText(''); 
     }
   }
+
   const decreaseIndex = () => {
     if (index > 0){
       setIndex(index-1);
+      setGuess('');
+      setGuessText('');
     }
   }
+
+  const cleanText = (text) => {
+    if (!text) return "";
+    
+    return text
+      .toLowerCase()                     
+      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?'"\[\]]/g, "") 
+      .replace(/\s+/g, "")              
+      .trim();                           
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault(); 
+    if (cleanText(guessText) === cleanText(flashCards[index].answer)) {
+      setGuess('true');
+    } else {
+      setGuess('false');
+    }
+  }
+
+  const answerType = guess === 'true' ? 'correct' : guess === 'false' ? 'incorrect' : '';
+
   return (
     <div className="App">
       <h1> Computer Science Flashcards </h1>
@@ -126,9 +163,22 @@ const App = () => {
         difficulty={flashCards[index].difficulty}
         image={flashCards[index].image}
       />
+      <div className={`form-container ${answerType}`}>
+        <form onSubmit={handleSubmit}>
+          <input
+            className={`guess-input ${answerType}`}
+            value={guessText}
+            type="text"
+            onChange={(e) => setGuessText(e.target.value)}
+            placeholder="Type answer here..."
+          />
+          <button type="submit" className="submit-btn">Submit</button>
+        </form>
+      </div>
       <div className="button-container"> 
-        <button onClick={decreaseIndex}> Previous </button>
-        <button onClick={increaseIndex}> Next </button>
+        <button onClick={decreaseIndex} className={`prev-btn ${isPrevDisabled}`}> Previous </button>
+        <button onClick={increaseIndex} className={`next-btn ${isNextDisabled}`}> Next </button>
+        <button onClick={handleShuffle}> Shuffle </button>
       </div>
     </div>
   )

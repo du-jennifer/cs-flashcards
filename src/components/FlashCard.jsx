@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const FlashCard = (props) => {
     const [showQuestion, setShowQuestion] = useState(true);
+
+    useEffect(() => {
+        setShowQuestion(true);
+    }, [props.question]);
     
     const switchState = () => {
         if (showQuestion) {

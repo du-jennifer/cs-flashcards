@@ -55,13 +55,14 @@ body {
   gap: 1rem;    
   justify-content: center;
 }
-
+button {
+  background-color: rgb(240,255,255);
+  border: 1px solid;
+  border-radius: 3px;
+}
 .button-container button {
-    border-radius: 3px;
     min-width: 90px; 
-    border: 1px solid;
     padding: 5px 5px; 
-    background-color: rgb(240,255,255);
 }
 
 .flashcard-image {
@@ -69,4 +70,31 @@ body {
   height: 110px;        /* Fixes the height so all flashcards stay uniform */
   object-fit: contain;  /* Scales the image without cropping or stretching */
   margin-top: 1rem;
+}
+
+.guess-input {
+  padding: 3px 3px; 
+  border-radius: 3px;
+}
+.correct {
+  border-color: #2ecc71 !important;
+}
+
+.incorrect {
+  border-color: #e74c3c !important;
+}
+
+.form-container {
+  padding: 10px;
+}
+
+.submit-btn {
+  margin-left: 10px;
+  cursor: pointer;
+  padding: 3px 3px; 
+}
+
+.prev-btn.disabled, .next-btn.disabled {
+  background-color: rgb(180,190,190);
+  pointer-events: none;
 }
